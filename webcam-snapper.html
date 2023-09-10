@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access webcam</title>
+</head>
+
+<body>
+
+    <video id="video" width="640" height="480" autoplay></video>
+    <button id="snap">Snap Photo</button>
+    <canvas id="canvas" width="640" height="480"></canvas>
+    <script>
+        async function initCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia( { video: true } );
+                const video = document.getElementById( 'video' );
+                video.srcObject = stream;
+                await video.play();
+            } catch ( error ) {
+                console.error( 'Something went wrong!', error );
+            }
+        }
+
+        function snapOfVideo() {
+            const video = document.getElementById( 'video' );
+            const canvas = document.getElementById( 'canvas' );
+            const context = canvas.getContext( '2d' );
+            context.drawImage( video, 0, 0, 640, 480 );
+        }
+
+        document.getElementById( 'snap' ).addEventListener( 'click', snapOfVideo() );
+
+        // Initialize the camera when the page loads
+        window.addEventListener( 'DOMContentLoaded', () => {
+            initCamera();
+        } );
+
+        setInterval( () => {
+            snapOfVideo()
+        }, 2000 );
+    </script>
+
+
+</body>
+
+</html>
